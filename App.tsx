@@ -1,118 +1,128 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+import React, {useState} from 'react';
+import {StyleSheet, Text, View, ScrollView} from 'react-native';
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  //* How to declear a type of an object
+  // type person = {
+  //   name: string;
+  //   age: number;
+  // };
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  //? When setting up useState for multiple type object
+  // const [person, setPerson] = useState<person>({
+  //   name: 'pascal',
+  //   age: 20,
+  // });
+
+  //! When passing a state with multiple types
+  // const clickHandler = () => {
+  //   setName('Wisdom');
+  //   setPerson(nextPerson => ({
+  //     ...nextPerson,
+  //     name: 'Pascal',
+  //     age: 23,
+  //   }));
+  // };
+
+  //? Passing a type to a state with a having a string as it value
+  // const [name, setName] = useState<string>('Abel');
+  // const [age, setAge] = useState<string>('29');
+
+  type person = {
+    name: string;
+    key: string;
   };
 
+  const [people, setPeople] = useState<person[]>([
+    {
+      name: 'Abel',
+      key: '1',
+    },
+    {
+      name: 'Kayode',
+      key: '2',
+    },
+    {
+      name: 'Wisdom',
+      key: '3',
+    },
+    {
+      name: 'Pascal',
+      key: '4',
+    },
+    {
+      name: 'Samuel',
+      key: '5',
+    },
+    {
+      name: 'Sly',
+      key: '6',
+    },
+    {
+      name: 'Ejiro',
+      key: '7',
+    },
+    {
+      name: 'Blossom',
+      key: '8',
+    },
+  ]);
+
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
+    <View style={styles.cointainer}>
+      <ScrollView>
+        {people.map(item => (
+          <View key={item.key}>
+            <Text style={styles.item}>{item.name}</Text>
+          </View>
+        ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
+    //! Using text input and field to create a form and updating it as the value changes
+    // <View style={styles.cointainer}>
+    //   <Text>Enter Name:</Text>
+    //   <TextInput
+    //     style={styles.input}
+    //     placeholder="e.g John Doe"
+    //     onChangeText={val => setName(val)}
+    //   />
+
+    //   <Text>Enter Age:</Text>
+    //   <TextInput
+    //     style={styles.input}
+    //     placeholder="e.g 23"
+    //     keyboardType="numeric"
+    //     onChangeText={val => setAge(val)}
+    //   />
+    //   <Text>
+    //     name: {name}, age: {age}
+    //   </Text>
+    // </View>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  cointainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: 40,
+    paddingHorizontal: 20,
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
-  sectionTitle: {
+  item: {
+    marginTop: 24,
+    padding: 30,
+    backgroundColor: 'pink',
     fontSize: 24,
-    fontWeight: '600',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+  // input: {
+  //   borderWidth: 1,
+  //   borderColor: '#777',
+  //   padding: 8,
+  //   margin: 10,
+  //   width: 200,
+  // },
 });
 
 export default App;
