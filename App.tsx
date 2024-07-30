@@ -1,103 +1,66 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
+import Header from './components/Header';
+import TodoItem from './components/TodoItem';
+import AddTodo from './components/AddTodo';
+// import Sandbox from './components/Sandbox';
 
 function App(): React.JSX.Element {
-  //* How to declear a type of an object
-  // type person = {
-  //   name: string;
-  //   age: number;
-  // };
-
-  //? When setting up useState for multiple type object
-  // const [person, setPerson] = useState<person>({
-  //   name: 'pascal',
-  //   age: 20,
-  // });
-
-  //! When passing a state with multiple types
-  // const clickHandler = () => {
-  //   setName('Wisdom');
-  //   setPerson(nextPerson => ({
-  //     ...nextPerson,
-  //     name: 'Pascal',
-  //     age: 23,
-  //   }));
-  // };
-
-  //? Passing a type to a state with a having a string as it value
-  // const [name, setName] = useState<string>('Abel');
-  // const [age, setAge] = useState<string>('29');
-
-  type person = {
-    name: string;
+  type ITodos = {
+    text: string;
     key: string;
   };
 
-  const [people, setPeople] = useState<person[]>([
-    {
-      name: 'Abel',
-      key: '1',
-    },
-    {
-      name: 'Kayode',
-      key: '2',
-    },
-    {
-      name: 'Wisdom',
-      key: '3',
-    },
-    {
-      name: 'Pascal',
-      key: '4',
-    },
-    {
-      name: 'Samuel',
-      key: '5',
-    },
-    {
-      name: 'Sly',
-      key: '6',
-    },
-    {
-      name: 'Ejiro',
-      key: '7',
-    },
-    {
-      name: 'Blossom',
-      key: '8',
-    },
+  const [todos, setTodos] = useState<ITodos[]>([
+    {text: 'Buy coffee', key: '1'},
+    {text: 'Create an app', key: '2'},
+    {text: 'Play on the switch', key: '3'},
+    {text: 'Play football', key: '4'},
   ]);
 
-  return (
-    <View style={styles.cointainer}>
-      <ScrollView>
-        {people.map(item => (
-          <View key={item.key}>
-            <Text style={styles.item}>{item.name}</Text>
-          </View>
-        ))}
-      </ScrollView>
-    </View>
-    //! Using text input and field to create a form and updating it as the value changes
-    // <View style={styles.cointainer}>
-    //   <Text>Enter Name:</Text>
-    //   <TextInput
-    //     style={styles.input}
-    //     placeholder="e.g John Doe"
-    //     onChangeText={val => setName(val)}
-    //   />
+  function pressHandler(key: string): void {
+    setTodos(prevTodos => {
+      return prevTodos.filter(todo => todo.key !== key);
+    });
+  }
 
-    //   <Text>Enter Age:</Text>
-    //   <TextInput
-    //     style={styles.input}
-    //     placeholder="e.g 23"
-    //     keyboardType="numeric"
-    //     onChangeText={val => setAge(val)}
-    //   />
-    //   <Text>
-    //     name: {name}, age: {age}
-    //   </Text>
-    // </View>
+  const submitHandler = (text: string) => {
+    if (text.length > 3) {
+      setTodos(prevTodos => {
+        return [{text: text, key: Math.random().toString()}, ...prevTodos];
+      });
+    } else {
+      Alert.alert('OOPS!', 'Todos must be 3 characters long');
+    }
+  };
+
+  return (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}>
+      <View style={styles.cointainer}>
+        <Header />
+        <View style={styles.content}>
+          <AddTodo submitHandler={submitHandler} />
+          <View style={styles.list}>
+            <FlatList
+              data={todos}
+              renderItem={({item}) => (
+                <TodoItem item={item} pressHandler={pressHandler} />
+              )}
+            />
+          </View>
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -105,24 +68,15 @@ const styles = StyleSheet.create({
   cointainer: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 40,
-    paddingHorizontal: 20,
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
-  item: {
-    marginTop: 24,
-    padding: 30,
-    backgroundColor: 'pink',
-    fontSize: 24,
+  content: {
+    padding: 40,
+    flex: 1,
   },
-  // input: {
-  //   borderWidth: 1,
-  //   borderColor: '#777',
-  //   padding: 8,
-  //   margin: 10,
-  //   width: 200,
-  // },
+  list: {
+    margin: 20,
+    flex: 1,
+  },
 });
 
 export default App;
